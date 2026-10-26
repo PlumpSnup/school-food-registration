@@ -16,6 +16,14 @@ const STEPS = [
   },
 ];
 
+const MEAL = [
+  { name: "Chicken breast", note: "Baked and mildly seasoned", color: "chicken" },
+  { name: "Rice", note: "Soft, fluffy white rice", color: "rice" },
+  { name: "Carrots", note: "Fresh, crunchy sticks", color: "carrot" },
+  { name: "Cucumbers", note: "Crisp mini cucumbers", color: "cucumber" },
+  { name: "Water", note: "A small bottle, no sugary drinks", color: "water" },
+];
+
 export default function Home() {
   return (
     <>
@@ -67,6 +75,22 @@ export default function Home() {
                 </li>
               ))}
             </ol>
+          </div>
+        </section>
+
+        <section className="meal" aria-labelledby="meal-title">
+          <div className="wrap">
+            <h2 id="meal-title">What&apos;s in the lunchbox</h2>
+            <p className="section-lead">Our first meal is simple, filling and made for kids.</p>
+            <ul className="lunchbox">
+              {MEAL.map((item) => (
+                <li key={item.name} className={`food food-${item.color}`}>
+                  <span className="food-dot" aria-hidden="true" />
+                  <h3>{item.name}</h3>
+                  <p>{item.note}</p>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 

@@ -8,6 +8,7 @@
   --line: #e7dfc2;
   --error: #c62828;
   --radius: 18px;
+  --soft-shadow: 0 10px 24px rgba(13, 13, 13, 0.12), 0 2px 6px rgba(13, 13, 13, 0.08);
 }
 
 * {
@@ -62,23 +63,30 @@ h2 {
   padding: 0.8em 1.8em;
   text-decoration: none;
   cursor: pointer;
-  box-shadow: 0 4px 0 var(--black);
-  transition: transform 0.1s, box-shadow 0.1s;
+  /* The solid edge underneath makes it look like a physical button. */
+  --depth: 5px;
+  --edge: var(--black);
+  box-shadow: 0 var(--depth) 0 var(--edge), 0 calc(var(--depth) + 6px) 16px rgba(13, 13, 13, 0.18);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 5px 0 var(--black);
+  transform: translateY(-2px);
+  box-shadow: 0 calc(var(--depth) + 2px) 0 var(--edge), 0 calc(var(--depth) + 10px) 22px rgba(13, 13, 13, 0.22);
 }
 
 .btn:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 var(--black);
+  transform: translateY(var(--depth));
+  box-shadow: 0 0 0 var(--edge), 0 2px 4px rgba(13, 13, 13, 0.2);
+  transition-duration: 0.05s;
 }
 
 .btn:disabled {
   opacity: 0.6;
   cursor: wait;
+  transform: none;
 }
 
 .btn:focus-visible,
@@ -92,7 +100,7 @@ textarea:focus-visible {
 .btn-small {
   font-size: 0.9rem;
   padding: 0.55em 1.2em;
-  box-shadow: 0 3px 0 var(--black);
+  --depth: 4px;
 }
 
 .btn-block {
@@ -124,7 +132,7 @@ textarea:focus-visible {
 }
 
 .topbar .btn {
-  box-shadow: none;
+  --edge: #9c7300;
   border-color: var(--yellow);
 }
 
@@ -138,6 +146,7 @@ textarea:focus-visible {
 }
 
 .hero-logo {
+  filter: drop-shadow(0 12px 18px rgba(13, 13, 13, 0.18));
   width: min(300px, 70vw);
   height: auto;
   margin-bottom: 24px;
@@ -187,6 +196,8 @@ textarea:focus-visible {
 }
 
 .step {
+  background: #161616;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
   border: 2px solid #333;
   border-radius: var(--radius);
   padding: 24px;
@@ -214,6 +225,90 @@ textarea:focus-visible {
   color: #ddd;
 }
 
+/* Lunchbox */
+.meal {
+  padding: 64px 0;
+}
+
+.section-lead {
+  text-align: center;
+  color: var(--muted);
+  font-size: 1.1rem;
+  margin: 0 0 32px;
+}
+
+.lunchbox {
+  list-style: none;
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 900px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  background: var(--black);
+  border-radius: 28px;
+  box-shadow: 0 18px 40px rgba(13, 13, 13, 0.25);
+}
+
+.food {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 22px 16px;
+  text-align: center;
+  box-shadow: var(--soft-shadow);
+  transition: transform 0.15s ease;
+}
+
+.food:hover {
+  transform: translateY(-3px) rotate(-1deg);
+}
+
+.food h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.2em;
+}
+
+.food p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.food-dot {
+  display: block;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  border: 2px solid var(--black);
+  box-shadow: inset -6px -6px 0 rgba(0, 0, 0, 0.12), 0 4px 8px rgba(13, 13, 13, 0.15);
+}
+
+.food-chicken .food-dot {
+  background: #e9b675;
+  border-radius: 46% 54% 50% 50% / 60% 55% 45% 40%;
+}
+
+.food-rice .food-dot {
+  background: #fffdf3;
+}
+
+.food-carrot .food-dot {
+  background: #ff8a1e;
+  width: 24px;
+  border-radius: 999px;
+}
+
+.food-cucumber .food-dot {
+  background: radial-gradient(circle, #d8f0b8 0 38%, #5fae3e 40%);
+}
+
+.food-water .food-dot {
+  background: linear-gradient(#8fd3ff, #4fb2f0);
+  width: 30px;
+  border-radius: 10px 10px 12px 12px;
+}
+
 /* Prices */
 .prices {
   padding: 64px 0;
@@ -235,7 +330,7 @@ textarea:focus-visible {
   border-radius: var(--radius);
   padding: 28px 24px;
   text-align: center;
-  box-shadow: 0 6px 0 var(--black);
+  box-shadow: 0 6px 0 var(--black), var(--soft-shadow);
 }
 
 .price-card.featured {
@@ -321,7 +416,7 @@ textarea:focus-visible {
   border: 2px solid var(--black);
   border-radius: var(--radius);
   padding: 28px 24px;
-  box-shadow: 0 8px 0 var(--black);
+  box-shadow: 0 8px 0 var(--black), var(--soft-shadow);
 }
 
 .field {
@@ -368,6 +463,7 @@ textarea {
   border-radius: 12px;
   background: var(--cream);
   color: var(--ink);
+  box-shadow: inset 0 2px 3px rgba(13, 13, 13, 0.06);
 }
 
 input:focus,
@@ -405,12 +501,25 @@ textarea {
 }
 
 .choice span {
+  box-shadow: 0 3px 0 var(--line), 0 6px 10px rgba(13, 13, 13, 0.08);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s;
   display: inline-block;
   padding: 0.55em 1.1em;
   border: 2px solid var(--line);
   border-radius: 999px;
   background: var(--cream);
   cursor: pointer;
+}
+
+.choice span:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 var(--line), 0 9px 14px rgba(13, 13, 13, 0.12);
+}
+
+.choice span:active,
+.choice input:checked + span {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 var(--black), 0 1px 3px rgba(13, 13, 13, 0.15);
 }
 
 .choice input:checked + span {
@@ -576,7 +685,15 @@ tr:last-child td {
   html {
     scroll-behavior: auto;
   }
-  .btn {
+  .btn,
+  .choice span,
+  .food {
     transition: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .food:last-child {
+    grid-column: 1 / -1;
   }
 }
