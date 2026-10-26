@@ -320,10 +320,18 @@ textarea:focus-visible {
   padding: 28px 24px;
   text-align: center;
   box-shadow: 0 6px 0 var(--brown), var(--soft-shadow);
+  --tilt: 0deg;
+  transform: rotate(var(--tilt));
+  transition: transform 0.15s ease;
 }
 
-.step:nth-child(1) { transform: rotate(-1.5deg); }
-.step:nth-child(3) { transform: rotate(1.5deg); }
+.step:nth-child(1) { --tilt: -1.5deg; }
+.step:nth-child(3) { --tilt: 1.5deg; }
+
+/* Same little lift-and-turn as the lunchbox food cards. */
+.step:hover {
+  transform: translateY(-3px) rotate(calc(var(--tilt) - 1deg));
+}
 
 .step-icon {
   position: relative;
@@ -340,20 +348,6 @@ textarea:focus-visible {
 .step-icon svg {
   width: 44px;
   height: 44px;
-}
-
-.step-num {
-  position: absolute;
-  top: -4px;
-  right: -6px;
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--brown);
-  color: var(--yellow);
-  font: 800 1rem var(--font-display), system-ui, sans-serif;
 }
 
 .step h3 {
@@ -464,6 +458,11 @@ textarea:focus-visible {
   padding: 30px 24px;
   text-align: center;
   box-shadow: 0 6px 0 var(--brown), var(--soft-shadow);
+  transition: transform 0.15s ease;
+}
+
+.price-card:hover {
+  transform: translateY(-3px) rotate(-1deg);
 }
 
 .price-card.featured {
@@ -868,7 +867,7 @@ tr:last-child td {
   }
 
   .step:nth-child(n) {
-    transform: none;
+    --tilt: 0deg;
   }
 
   .doodle {
@@ -882,7 +881,9 @@ tr:last-child td {
   }
   .btn,
   .choice span,
-  .food {
+  .food,
+  .step,
+  .price-card {
     transition: none;
   }
 }

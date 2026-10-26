@@ -103,11 +103,10 @@ export default function Home() {
           <div className="wrap">
             <h2 id="how-title">How it works</h2>
             <ol className="steps">
-              {STEPS.map((step, i) => (
+              {STEPS.map((step) => (
                 <li key={step.title} className="step">
                   <span className="step-icon" aria-hidden="true">
                     <step.icon />
-                    <span className="step-num">{i + 1}</span>
                   </span>
                   <h3>{step.title}</h3>
                   <p>{step.text}</p>
