@@ -187,6 +187,12 @@ export default function Home() {
             Your privacy: we only use your details to tell you about MealBee&apos;s launch. We never sell or share
             them, and you can ask us to delete them at any time.
           </p>
+          <p>
+            Questions? Email us at{" "}
+            <a href="mailto:alyaadam1213@gmail.com" className="footer-link">
+              alyaadam1213@gmail.com
+            </a>
+          </p>
           <p>© {new Date().getFullYear()} MealBee · A student project from Dubai</p>
         </div>
       </footer>

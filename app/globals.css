@@ -747,6 +747,17 @@ textarea {
   margin: 0 auto 0.8em;
 }
 
+.footer-link {
+  color: var(--yellow);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footer-link:hover {
+  color: var(--cream);
+}
+
 .footer-name {
   font: 800 1.8rem var(--font-display), system-ui, sans-serif;
   color: var(--cream);
