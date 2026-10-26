@@ -126,7 +126,7 @@ export default function Home() {
             <ul className="lunchbox">
               {MEAL.map((item) => (
                 <li key={item.name} className={`food food-${item.color}`}>
-                  <span className="food-dot" aria-hidden="true" />
+                  <Image src={`/food/${item.color}.png`} alt="" width={80} height={80} className="food-img" />
                   <h3>{item.name}</h3>
                   <p>{item.note}</p>
                 </li>

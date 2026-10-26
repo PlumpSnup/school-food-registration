@@ -429,39 +429,12 @@ textarea:focus-visible {
   font-size: 0.95rem;
 }
 
-.food-dot {
+.food-img {
   display: block;
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 12px;
-  border-radius: 50%;
-  border: 3px solid var(--brown);
-  box-shadow: inset -6px -6px 0 rgba(74, 53, 38, 0.12), 0 4px 8px rgba(74, 53, 38, 0.15);
-}
-
-.food-chicken .food-dot {
-  background: #e9b675;
-  border-radius: 46% 54% 50% 50% / 60% 55% 45% 40%;
-}
-
-.food-rice .food-dot {
-  background: #fffdf3;
-}
-
-.food-carrot .food-dot {
-  background: #ff8a1e;
-  width: 24px;
-  border-radius: 999px;
-}
-
-.food-cucumber .food-dot {
-  background: radial-gradient(circle, #d8f0b8 0 38%, #5fae3e 40%);
-}
-
-.food-water .food-dot {
-  background: linear-gradient(#8fd3ff, #4fb2f0);
-  width: 30px;
-  border-radius: 10px 10px 12px 12px;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 10px;
+  filter: drop-shadow(0 5px 6px rgba(74, 53, 38, 0.18));
 }
 
 /* Prices */
