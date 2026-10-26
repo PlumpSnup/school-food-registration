@@ -463,8 +463,9 @@ textarea {
 }
 
 .thanks-bee {
-  font-size: 3rem;
-  margin: 0;
+  width: 88px;
+  height: auto;
+  margin: 0 auto 12px;
 }
 
 .thanks p:last-child {

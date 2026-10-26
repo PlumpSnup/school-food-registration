@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { GRADES, PLANS } from "@/lib/constants";
 
@@ -50,9 +51,7 @@ export default function WaitlistForm() {
   if (status === "created" || status === "duplicate") {
     return (
       <div className="form-card thanks" role="status">
-        <p className="thanks-bee" aria-hidden="true">
-          🐝
-        </p>
+        <Image src="/bee.png" alt="" width={256} height={256} className="thanks-bee" />
         <h3>{status === "created" ? "You're on the list!" : "You're already on the list!"}</h3>
         <p>
           {status === "created"
