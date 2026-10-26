@@ -1,16 +1,30 @@
 import Image from "next/image";
+import {
+  Doodles,
+  HeartIcon,
+  LeafIcon,
+  PhoneIcon,
+  PotIcon,
+  SchoolIcon,
+  StarIcon,
+  Twirl,
+  Wave,
+} from "./Decor";
 import WaitlistForm from "./WaitlistForm";
 
 const STEPS = [
   {
+    icon: PhoneIcon,
     title: "Pick a lunch",
     text: "Choose a fresh, healthy meal for your child in the app. One day or the whole week.",
   },
   {
+    icon: PotIcon,
     title: "Cooked fresh",
     text: "A licensed kitchen prepares it that morning. Healthy, nut-free and kid-approved.",
   },
   {
+    icon: SchoolIcon,
     title: "Delivered to school",
     text: "Lunch arrives at school, ready to eat. No packing, no 7am panic.",
   },
@@ -40,6 +54,9 @@ export default function Home() {
 
       <main>
         <section className="hero">
+          <div className="hero-blob" aria-hidden="true" />
+          <Twirl className="hero-twirl" />
+          <Doodles />
           <div className="wrap hero-inner">
             <Image
               src="/logo.png"
@@ -58,17 +75,39 @@ export default function Home() {
             <a href="#join" className="btn">
               Join the waitlist
             </a>
+            <ul className="badges" aria-label="What makes MealBee different">
+              <li>
+                <span className="badge-icon">
+                  <LeafIcon />
+                </span>
+                Healthy
+              </li>
+              <li>
+                <span className="badge-icon">
+                  <StarIcon />
+                </span>
+                Fresh daily
+              </li>
+              <li>
+                <span className="badge-icon">
+                  <HeartIcon />
+                </span>
+                Kid-approved
+              </li>
+            </ul>
           </div>
         </section>
 
         <section className="how" aria-labelledby="how-title">
+          <Wave />
           <div className="wrap">
             <h2 id="how-title">How it works</h2>
             <ol className="steps">
               {STEPS.map((step, i) => (
                 <li key={step.title} className="step">
-                  <span className="step-num" aria-hidden="true">
-                    {i + 1}
+                  <span className="step-icon" aria-hidden="true">
+                    <step.icon />
+                    <span className="step-num">{i + 1}</span>
                   </span>
                   <h3>{step.title}</h3>
                   <p>{step.text}</p>
@@ -79,6 +118,8 @@ export default function Home() {
         </section>
 
         <section className="meal" aria-labelledby="meal-title">
+          <Wave />
+          <Twirl className="meal-twirl" />
           <div className="wrap">
             <h2 id="meal-title">What&apos;s in the lunchbox</h2>
             <p className="section-lead">Our first meal is simple, filling and made for kids.</p>
@@ -95,6 +136,7 @@ export default function Home() {
         </section>
 
         <section className="prices" aria-labelledby="prices-title">
+          <Wave />
           <div className="wrap">
             <h2 id="prices-title">Simple prices</h2>
             <div className="price-grid">
@@ -121,6 +163,8 @@ export default function Home() {
         </section>
 
         <section id="join" className="join" aria-labelledby="join-title">
+          <Wave />
+          <Twirl className="join-twirl" />
           <div className="wrap join-inner">
             <div className="join-copy">
               <h2 id="join-title">Join the waitlist</h2>
@@ -135,6 +179,7 @@ export default function Home() {
       </main>
 
       <footer className="footer">
+        <Wave />
         <div className="wrap">
           <p className="footer-name">
             Meal<span className="y">Bee</span>
