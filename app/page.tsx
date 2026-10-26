@@ -8,7 +8,7 @@ const STEPS = [
   },
   {
     title: "Cooked fresh",
-    text: "A licensed kitchen prepares it that morning. Halal, nut-free and kid-approved.",
+    text: "A licensed kitchen prepares it that morning. Healthy, nut-free and kid-approved.",
   },
   {
     title: "Delivered to school",
