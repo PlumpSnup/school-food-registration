@@ -322,16 +322,10 @@ textarea:focus-visible {
   box-shadow: 0 6px 0 var(--brown), var(--soft-shadow);
   --tilt: 0deg;
   transform: rotate(var(--tilt));
-  transition: transform 0.15s ease;
 }
 
 .step:nth-child(1) { --tilt: -1.5deg; }
 .step:nth-child(3) { --tilt: 1.5deg; }
-
-/* Same little lift-and-turn as the lunchbox food cards. */
-.step:hover {
-  transform: translateY(-3px) rotate(calc(var(--tilt) - 1deg));
-}
 
 .step-icon {
   position: relative;
@@ -458,11 +452,6 @@ textarea:focus-visible {
   padding: 30px 24px;
   text-align: center;
   box-shadow: 0 6px 0 var(--brown), var(--soft-shadow);
-  transition: transform 0.15s ease;
-}
-
-.price-card:hover {
-  transform: translateY(-3px) rotate(-1deg);
 }
 
 .price-card.featured {
