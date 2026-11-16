@@ -204,3 +204,12 @@ export function lunchesOn(state: DemoState, date: string, now: Now = nowInDubai(
 export function activeCount(state: DemoState, date: string, now: Now = nowInDubai()): number {
   return lunchesOn(state, date, now).filter((l) => l.status !== "cancelled").length;
 }
+
+/** Dates a child already has a (not cancelled) lunch on. */
+export function takenDays(state: DemoState, childId: string): Set<string> {
+  return new Set(
+    state.orders
+      .filter((o) => o.child.id === childId)
+      .flatMap((o) => o.lunches.filter((l) => l.status !== "cancelled").map((l) => l.date)),
+  );
+}

@@ -12,6 +12,7 @@ import {
   price,
   readState,
   resetState,
+  takenDays,
   updateState,
   type Child,
   type LunchStatus,
@@ -109,40 +110,40 @@ export async function saveChild(_prev: FormState, formData: FormData): Promise<F
 
 // Orders
 
+/** Places one order per selected child for the picked days they don't already have. */
 export async function placeOrder(formData: FormData): Promise<void> {
   const email = await requireParent();
-  const childId = text(formData, "child", 40);
+  const childIds = text(formData, "children", 400).split(",").filter(Boolean);
   const asked = new Set(text(formData, "days", 200).split(","));
   const week = schoolWeek(orderWeekStart());
 
-  const id = await updateState((s) => {
-    const child = s.parents[email]?.children.find((c) => c.id === childId);
-    if (!child) return null;
-    // Skip days already ordered for this child, closed days and anything outside the order week.
-    const taken = new Set(
-      s.orders
-        .filter((o) => o.child.id === child.id)
-        .flatMap((o) => o.lunches.filter((l) => l.status !== "cancelled").map((l) => l.date)),
-    );
-    const days = week.filter((d) => asked.has(d) && isSchoolDay(d) && isOpen(d) && !taken.has(d));
-    if (days.length === 0) return null;
-    const wholeWeek = days.length === 5;
-    const order = {
-      id: `MB-${s.nextOrderNo++}`,
-      email,
-      child: { ...child },
-      plan: wholeWeek ? ("week" as const) : ("days" as const),
-      createdAt: new Date().toISOString(),
-      ...price(days.length, wholeWeek),
-      lunches: days.map((date) => ({ date, status: "ordered" as const })),
-    };
-    s.orders.push(order);
-    return order.id;
+  const ids = await updateState((s) => {
+    const placed: string[] = [];
+    for (const childId of childIds) {
+      const child = s.parents[email]?.children.find((c) => c.id === childId);
+      if (!child) continue;
+      const taken = takenDays(s, child.id);
+      const days = week.filter((d) => asked.has(d) && isSchoolDay(d) && isOpen(d) && !taken.has(d));
+      if (days.length === 0) continue;
+      const wholeWeek = days.length === 5;
+      const order = {
+        id: `MB-${s.nextOrderNo++}`,
+        email,
+        child: { ...child },
+        plan: wholeWeek ? ("week" as const) : ("days" as const),
+        createdAt: new Date().toISOString(),
+        ...price(days.length, wholeWeek),
+        lunches: days.map((date) => ({ date, status: "ordered" as const })),
+      };
+      s.orders.push(order);
+      placed.push(order.id);
+    }
+    return placed;
   });
 
-  if (!id) redirect(`/order?child=${childId}&error=1`);
+  if (ids.length === 0) redirect(`/order?children=${childIds.join(",")}&error=1`);
   revalidatePath("/kitchen", "layout");
-  redirect(`/order/${id}`);
+  redirect(`/order/${ids.join(",")}`);
 }
 
 export async function cancelLunch(orderId: string, date: string): Promise<void> {

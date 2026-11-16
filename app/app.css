@@ -726,6 +726,129 @@
   margin-bottom: 18px;
 }
 
+/* Who's it for? */
+
+.who {
+  border: 0;
+  padding: 0;
+  margin: 0 0 20px;
+  min-width: 0;
+}
+
+.who-label {
+  padding: 0;
+  margin-bottom: 8px;
+  font: 800 1rem var(--font-display), system-ui, sans-serif;
+  color: var(--brown-soft);
+}
+
+.who-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 2px 0 10px;
+}
+
+.who-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 8px 14px 8px 8px;
+  border: 2.5px solid var(--line);
+  border-radius: 999px;
+  background: var(--cream);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--line), 0 6px 10px rgba(74, 53, 38, 0.08);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s;
+}
+
+.who-chip:hover {
+  transform: translateY(-2px);
+}
+
+.who-chip.on {
+  background: var(--yellow);
+  border-color: var(--brown);
+  box-shadow: 0 0 0 var(--brown);
+  transform: translateY(3px);
+}
+
+.who-avatar {
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 2.5px solid var(--brown);
+  background: var(--honey);
+  font: 800 1rem var(--font-display), system-ui, sans-serif;
+  color: var(--brown);
+}
+
+.who-chip.on .who-avatar {
+  background: var(--brown);
+  color: var(--yellow);
+}
+
+.who-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.who-text b {
+  font: 800 1rem var(--font-display), system-ui, sans-serif;
+  color: var(--brown);
+}
+
+.who-text span {
+  font-size: 0.72rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.who-chip.on .who-text span {
+  color: var(--brown);
+}
+
+.who-add {
+  border-style: dashed;
+  box-shadow: none;
+}
+
+.who-add .who-avatar {
+  background: var(--cream);
+  border-style: dashed;
+}
+
+.who-hint {
+  margin: 2px 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.review-child {
+  margin-bottom: 18px;
+}
+
+.review-child .child-card {
+  margin-bottom: 10px;
+}
+
+.review-total {
+  margin-top: 4px;
+}
+
 /* Sticky bar at the bottom, like a cart bar */
 
 .bottom-bar {
@@ -1291,6 +1414,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .who-chip,
   .pill,
   .day,
   .week-card,
