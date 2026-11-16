@@ -78,8 +78,8 @@ export default async function LunchesPage() {
       )}
 
       <p className="note">
-        <Link href="/children" className="text-link">
-          Manage children
+        <Link href="/account" className="text-link">
+          Your account, children and orders
         </Link>
       </p>
     </main>

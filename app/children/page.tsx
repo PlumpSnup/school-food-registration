@@ -58,7 +58,12 @@ export default async function ChildrenPage({ searchParams }: Props) {
       )}
 
       <form action={signOut} className="signout">
-        <span>Signed in as {email}</span>
+        <span>
+          Signed in as {email} ·{" "}
+          <Link href="/account" className="text-link">
+            Your account
+          </Link>
+        </span>
         <button type="submit" className="link-button">
           Sign out
         </button>

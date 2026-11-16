@@ -12,7 +12,9 @@ const HOME_LINKS: Item[] = [
   { href: "/kitchen", label: "Kitchen" },
 ];
 
-export default function HeaderNav({ signedIn }: { signedIn: boolean }) {
+/** `account` is the signed-in parent's initial, shown in the round account button. */
+export default function HeaderNav({ account }: { account: string | null }) {
+  const signedIn = account !== null;
   const path = usePathname();
 
   let actions: Item[];
@@ -55,6 +57,16 @@ export default function HeaderNav({ signedIn }: { signedIn: boolean }) {
               </Link>
             );
           })}
+        {signedIn && !path.startsWith("/kitchen") && !path.startsWith("/admin") && (
+          <Link
+            href="/account"
+            className={`account-button${path.startsWith("/account") ? " on" : ""}`}
+            aria-label="Your account"
+            aria-current={path.startsWith("/account") ? "page" : undefined}
+          >
+            {account}
+          </Link>
+        )}
       </div>
     </nav>
   );

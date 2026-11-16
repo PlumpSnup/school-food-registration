@@ -152,7 +152,39 @@ export async function cancelLunch(orderId: string, date: string): Promise<void> 
     if (lunch && canCancel(lunch)) lunch.status = "cancelled";
   });
   revalidatePath("/lunches");
+  revalidatePath("/account");
   revalidatePath("/kitchen", "layout");
+}
+
+// Account
+
+/** Removes a child and cancels their lunches that can still be cancelled. Past orders stay in the history. */
+export async function removeChild(childId: string): Promise<void> {
+  const email = await requireParent();
+  await updateState((s) => {
+    const parent = s.parents[email];
+    if (!parent) return;
+    parent.children = parent.children.filter((c) => c.id !== childId);
+    for (const order of s.orders) {
+      if (order.email !== email || order.child.id !== childId) continue;
+      for (const lunch of order.lunches) if (canCancel(lunch)) lunch.status = "cancelled";
+    }
+  });
+  revalidatePath("/account");
+  revalidatePath("/kitchen", "layout");
+}
+
+/** Deletes the parent, their children and all their orders, then signs them out. */
+export async function deleteAccount(formData: FormData): Promise<void> {
+  const email = await requireParent();
+  if (formData.get("confirm") !== "yes") redirect("/account?confirm=1#delete");
+  await updateState((s) => {
+    delete s.parents[email];
+    s.orders = s.orders.filter((o) => o.email !== email);
+  });
+  await clearSignIn();
+  revalidatePath("/kitchen", "layout");
+  redirect("/account/deleted");
 }
 
 // Kitchen

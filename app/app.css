@@ -145,6 +145,11 @@
     display: none;
   }
 
+  /* With the round account button there's only room for the main button. */
+  .appbar-actions:has(.account-button):has(.pill-primary) .pill:not(.pill-primary) {
+    display: none;
+  }
+
   .label-short {
     display: inline;
   }
@@ -186,6 +191,37 @@
     font-size: 0.85rem;
     padding: 4px 10px;
   }
+}
+
+.account-button {
+  width: 38px;
+  height: 38px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 2.5px solid var(--brown);
+  background: var(--honey);
+  color: var(--brown);
+  font: 800 1.05rem var(--font-display), system-ui, sans-serif;
+  text-decoration: none;
+  box-shadow: 0 3px 0 var(--brown);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.account-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--brown);
+}
+
+.account-button:active,
+.account-button.on {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 var(--brown);
+}
+
+.account-button.on {
+  background: var(--yellow);
 }
 
 /* App pages */
@@ -1111,6 +1147,105 @@
   .week-price {
     font-size: 1.5rem;
   }
+}
+
+/* Account */
+
+.account-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -4px 0 8px;
+}
+
+.account-jump a {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--brown-soft);
+  text-decoration: none;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 11px;
+  background: var(--cream);
+}
+
+.account-jump a:hover {
+  background: var(--honey-soft);
+}
+
+.account-section {
+  scroll-margin-top: 84px;
+}
+
+.break {
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+.account-actions {
+  margin-top: 14px;
+}
+
+.child-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.child-actions form {
+  display: inline;
+}
+
+.danger-link {
+  color: #a2462a;
+}
+
+.account-add {
+  margin-top: 14px;
+}
+
+.order-total {
+  font: 800 1.05rem var(--font-display), system-ui, sans-serif;
+  color: var(--brown);
+  white-space: nowrap;
+}
+
+.order-lunches {
+  margin: 10px -16px -14px;
+  border-top: 1.5px solid var(--line);
+}
+
+.row-end {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.row-end form {
+  display: inline;
+}
+
+.danger-card {
+  padding: 18px 20px;
+  border-color: #a2462a;
+  box-shadow: 0 6px 0 #a2462a, var(--soft-shadow);
+  background: #fff7f3;
+}
+
+.danger-card p {
+  margin: 0 0 14px;
+  font-size: 0.92rem;
+}
+
+.danger-card .consent {
+  margin-bottom: 14px;
+}
+
+.btn-danger {
+  background: #e4572e;
+  color: #fff;
+  border-color: #7a2a14;
+  --edge: #7a2a14;
 }
 
 @media print {

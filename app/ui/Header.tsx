@@ -4,7 +4,7 @@ import { currentParentEmail } from "@/lib/session";
 import HeaderNav from "./HeaderNav";
 
 export default async function Header() {
-  const signedIn = Boolean(await currentParentEmail());
+  const email = await currentParentEmail();
   return (
     <header className="appbar">
       <div className="appbar-inner">
@@ -18,7 +18,7 @@ export default async function Header() {
             <span className="brand-tag">Bee happy · bee healthy</span>
           </span>
         </Link>
-        <HeaderNav signedIn={signedIn} />
+        <HeaderNav account={email ? email.slice(0, 1).toUpperCase() : null} />
       </div>
     </header>
   );
