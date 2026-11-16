@@ -28,6 +28,7 @@ export function Twirl({ className = "" }: Props) {
     <svg className={`twirl ${className}`} viewBox="0 0 600 160" aria-hidden="true">
       <path
         d="M4 120 C 80 40 160 150 250 96 C 300 66 320 20 290 14 C 258 8 250 60 290 80 C 340 106 420 40 470 70 C 520 100 560 60 596 30"
+        pathLength={1}
         fill="none"
         stroke="currentColor"
         strokeWidth="7"

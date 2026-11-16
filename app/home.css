@@ -32,8 +32,9 @@
   margin: 10px;
   min-height: calc(100svh - 92px);
   border-radius: 40px;
-  background: var(--honey);
+  background: var(--brown);
   overflow: hidden;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,8 +43,33 @@
   text-align: center;
 }
 
+/* The photo sits under a warm brown-to-honey tint so the cream text stays readable. */
+.hero-photo {
+  object-fit: cover;
+  z-index: -2;
+  animation: hero-zoom 14s ease-out both;
+}
+
+.hero-tint {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse at 50% 45%, rgba(58, 38, 24, 0.55), rgba(58, 38, 24, 0.82) 70%),
+    linear-gradient(180deg, rgba(234, 169, 54, 0.35), rgba(74, 53, 38, 0.6));
+}
+
+@keyframes hero-zoom {
+  from {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
 .hero-card .kicker {
-  color: var(--brown);
+  color: var(--yellow);
 }
 
 .hero-content {
@@ -53,15 +79,23 @@
 }
 
 .hero-title {
+  color: var(--cream);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
   font-size: clamp(2.8rem, 8vw, 6rem);
   line-height: 0.98;
   letter-spacing: -0.01em;
   margin: 8px 0 0;
 }
 
+.hero-title .line {
+  display: block;
+}
+
 .sticker {
   display: inline-block;
-  background: var(--cream);
+  color: var(--brown);
+  text-shadow: none;
+  background: var(--yellow);
   border: 3px solid var(--brown);
   border-radius: 22px;
   padding: 0 0.22em 0.04em;
@@ -73,7 +107,8 @@
   max-width: 34em;
   margin: 26px auto 0;
   font-size: clamp(1.05rem, 2vw, 1.25rem);
-  color: var(--brown);
+  color: var(--cream);
+  opacity: 0.92;
 }
 
 .hero-ctas {
@@ -89,6 +124,13 @@
   align-items: center;
   justify-content: center;
   min-height: 60px;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--cream);
+  border-color: var(--cream);
+  --edge: rgba(255, 246, 232, 0.5);
 }
 
 .btn-arrow {
@@ -114,7 +156,7 @@
   left: 50%;
   transform: translateX(-50%);
   font: 800 1.6rem var(--font-display), system-ui, sans-serif;
-  color: var(--brown);
+  color: var(--yellow);
   text-decoration: none;
   animation: bob 1.8s ease-in-out infinite;
 }
@@ -132,12 +174,12 @@
   bottom: 16px;
   display: flex;
   justify-content: space-between;
-  border-top: 2px solid rgba(74, 53, 38, 0.22);
+  border-top: 2px solid rgba(255, 246, 232, 0.25);
   padding-top: 8px;
   font: 800 0.72rem var(--font-body), system-ui, sans-serif;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--brown-soft);
+  color: rgba(255, 246, 232, 0.75);
 }
 
 .twirl {
@@ -146,8 +188,8 @@
 }
 
 .hero-twirl {
-  color: var(--cream);
-  opacity: 0.75;
+  color: var(--honey);
+  opacity: 0.85;
   width: 560px;
   top: 14%;
   right: -60px;
@@ -174,6 +216,26 @@
   width: 68px;
   height: 68px;
   opacity: 0.2;
+}
+
+/* On the photo the tan doodles turn cream. */
+.hero-doodles .doodle {
+  filter: brightness(0) invert(0.95) sepia(0.3);
+  opacity: 0.22;
+  animation: float 7s ease-in-out infinite;
+}
+
+.hero-doodles .d2 { animation-duration: 8.5s; animation-delay: -2s; }
+.hero-doodles .d3 { animation-duration: 6.5s; animation-delay: -4s; }
+.hero-doodles .d4 { animation-duration: 9s; animation-delay: -1s; }
+.hero-doodles .d5 { animation-duration: 7.5s; animation-delay: -3s; }
+.hero-doodles .d6 { animation-duration: 8s; animation-delay: -5s; }
+
+@keyframes float {
+  50% {
+    translate: 0 -12px;
+    rotate: 6deg;
+  }
 }
 
 .d1 { top: 9%; left: 8%; transform: rotate(-12deg); width: 80px; height: 80px; }
@@ -237,12 +299,33 @@
   position: relative;
   margin-top: -34px;
   aspect-ratio: 4 / 3;
-  display: grid;
-  place-items: center;
   border-radius: 32px;
+  overflow: hidden;
   background: var(--honey-soft);
   border: 3px solid var(--brown);
   box-shadow: 0 6px 0 var(--brown), var(--soft-shadow);
+}
+
+.about-photo {
+  object-fit: cover;
+}
+
+.about-icons {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  gap: 2px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: var(--cream);
+  border: 2.5px solid var(--brown);
+  box-shadow: 0 4px 0 var(--brown);
+}
+
+.about-icons img {
+  width: 28px;
+  height: 28px;
 }
 
 .tray {
@@ -502,6 +585,9 @@
 
 /* Closing call to action */
 .closing {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   margin: 10px 0 90px;
   border-radius: 40px;
   background: var(--brown);
@@ -530,6 +616,149 @@
   flex: none;
 }
 
+.closing-photo {
+  object-fit: cover;
+  z-index: -2;
+  opacity: 0.28;
+}
+
+.closing::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, var(--brown) 30%, rgba(74, 53, 38, 0.55));
+}
+
+/* Photo strip */
+.day-strip {
+  padding: 90px 0 10px;
+}
+
+.strip {
+  list-style: none;
+  padding: 0;
+  margin: 40px 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
+}
+
+.strip-item {
+  position: relative;
+}
+
+.strip-item:nth-child(1) { rotate: -2deg; }
+.strip-item:nth-child(2) { rotate: 1.5deg; margin-top: 34px; }
+.strip-item:nth-child(3) { rotate: -1deg; }
+
+.strip-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 30px;
+  border: 3px solid var(--brown);
+  box-shadow: 0 6px 0 var(--brown), var(--soft-shadow);
+}
+
+.strip-photo img {
+  object-fit: cover;
+  transition: scale 0.5s ease;
+}
+
+.strip-item:hover .strip-photo img {
+  scale: 1.06;
+}
+
+.strip-cap {
+  position: absolute;
+  left: 50%;
+  bottom: -16px;
+  translate: -50% 0;
+  white-space: nowrap;
+  background: var(--yellow);
+  color: var(--brown);
+  border: 2.5px solid var(--brown);
+  border-radius: 999px;
+  padding: 3px 14px;
+  font: 800 0.95rem var(--font-display), system-ui, sans-serif;
+}
+
+/* The photos drift slowly as the page scrolls, in browsers that support scroll-linked animation. */
+@supports (animation-timeline: view()) {
+  .strip-photo img {
+    animation: drift linear both;
+    animation-timeline: view();
+  }
+
+  @keyframes drift {
+    from {
+      transform: translateY(-5%) scale(1.12);
+    }
+    to {
+      transform: translateY(5%) scale(1.12);
+    }
+  }
+}
+
+/* Motion: hero entrance, twirls drawing themselves and sections revealing on scroll. */
+.rise {
+  animation: rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--d, 0) * 120ms + 150ms);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+
+.sticker {
+  animation: pop 0.7s cubic-bezier(0.3, 1.6, 0.5, 1) 0.75s both;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: rotate(-14deg) scale(0.4);
+  }
+}
+
+.hero-twirl path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw 2.4s ease-in-out 0.5s forwards;
+}
+
+.hero-twirl-2 path {
+  animation-delay: 1.1s;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.js-reveal .reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: calc(var(--i, 0) * 110ms);
+}
+
+.js-reveal .how-step.reveal {
+  transform: translateX(-36px);
+}
+
+.js-reveal .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
 @media (max-width: 860px) {
   .stats {
     grid-template-columns: repeat(2, 1fr);
@@ -554,6 +783,22 @@
 
   .feature-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .strip {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .strip-item:nth-child(2) {
+    margin-top: 0;
+  }
+
+  .strip-photo {
+    aspect-ratio: 4 / 3;
   }
 
   .closing {
@@ -622,8 +867,18 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scroll-cue {
+  .scroll-cue,
+  .rise,
+  .sticker,
+  .hero-photo,
+  .hero-doodles .doodle,
+  .strip-photo img {
     animation: none;
+  }
+
+  .hero-twirl path {
+    animation: none;
+    stroke-dashoffset: 0;
   }
 
   .food,

@@ -2,13 +2,21 @@ import Image from "next/image";
 import Link from "next/link";
 import "./home.css";
 import { Doodles, HeartIcon, PhoneIcon, SchoolIcon, Twirl, Wave } from "./Decor";
+import CountUp from "./ui/CountUp";
+import RevealOnScroll from "./ui/RevealOnScroll";
 import WaitlistForm from "./WaitlistForm";
 
 const STATS = [
-  { value: "16.80", unit: "AED", label: "A lunch on the weekly plan" },
-  { value: "5", label: "Fresh foods in every box" },
-  { value: "6", unit: "PM", label: "Order cut-off, the day before" },
-  { value: "0", label: "Nuts in the kitchen" },
+  { value: 16.8, decimals: 2, unit: "AED", label: "A lunch on the weekly plan" },
+  { value: 5, label: "Fresh foods in every box" },
+  { value: 6, unit: "PM", label: "Order cut-off, the day before" },
+  { value: 0, label: "Nuts in the kitchen" },
+];
+
+const DAY = [
+  { img: "prep", caption: "Cooked fresh every morning", alt: "Rows of fresh lunches packed in containers" },
+  { img: "packed", caption: "Packed with care", alt: "Shredded chicken and broccoli in a lunch container" },
+  { img: "lunchtime", caption: "Opened at lunchtime", alt: "A child's hands opening a lunchbox at a school table" },
 ];
 
 const STEPS = [
@@ -52,25 +60,32 @@ export default function Home() {
     <>
       <main className="home">
         <section className="hero-card">
+          <Image src="/photos/hero.webp" alt="" fill priority sizes="100vw" className="hero-photo" />
+          <div className="hero-tint" aria-hidden="true" />
           <Doodles className="hero-doodles" />
           <Twirl className="hero-twirl" />
           <Twirl className="hero-twirl hero-twirl-2" />
           <div className="hero-content">
-            <p className="kicker">Bee happy · bee healthy</p>
+            <p className="kicker rise" style={{ "--d": 0 } as React.CSSProperties}>
+              Bee happy · bee healthy
+            </p>
             <h1 className="hero-title">
-              Lunch, sorted
-              <br />
-              before the <span className="sticker">bell.</span>
+              <span className="rise line" style={{ "--d": 1 } as React.CSSProperties}>
+                Lunch, sorted
+              </span>
+              <span className="rise line" style={{ "--d": 2 } as React.CSSProperties}>
+                before the <span className="sticker">bell.</span>
+              </span>
             </h1>
-            <p className="hero-lead">
+            <p className="hero-lead rise" style={{ "--d": 4 } as React.CSSProperties}>
               Busy mornings? Pick your child&apos;s lunches for the week in a minute. We cook them fresh and deliver
               them straight to school in Dubai.
             </p>
-            <div className="hero-ctas">
+            <div className="hero-ctas rise" style={{ "--d": 5 } as React.CSSProperties}>
               <Link href="/order" className="btn btn-arrow">
                 Order lunches <span className="arrow">→</span>
               </Link>
-              <a href="#how-it-works" className="btn btn-ghost">
+              <a href="#how-it-works" className="btn btn-outline">
                 How it works
               </a>
             </div>
@@ -85,10 +100,10 @@ export default function Home() {
         </section>
 
         <section id="stats" className="stats">
-          {STATS.map((s) => (
-            <div key={s.label} className="stat-item">
+          {STATS.map((s, i) => (
+            <div key={s.label} className="stat-item reveal" style={{ "--i": i } as React.CSSProperties}>
               <b>
-                {s.value}
+                <CountUp value={s.value} decimals={s.decimals} />
                 {s.unit && <small> {s.unit}</small>}
               </b>
               <span>{s.label}</span>
@@ -98,21 +113,27 @@ export default function Home() {
 
         <section className="about wrap">
           <div className="about-art">
-            <p className="kicker kicker-left">{"// About MealBee"}</p>
+            <p className="kicker kicker-left reveal">{"// About MealBee"}</p>
             <p className="ghost-word" aria-hidden="true">
               Fresh
             </p>
-            <div className="about-pic" aria-hidden="true">
-              <div className="tray">
+            <div className="about-pic reveal">
+              <Image
+                src="/photos/meal.webp"
+                alt="Rice, shredded chicken and vegetables in a lunch box"
+                fill
+                sizes="(max-width: 860px) 92vw, 420px"
+                className="about-photo"
+              />
+              <div className="about-icons" aria-hidden="true">
                 {FOODS.map((f) => (
-                  <Image key={f.img} src={`/food/${f.img}.png`} alt="" width={72} height={72} />
+                  <Image key={f.img} src={`/food/${f.img}.png`} alt="" width={40} height={40} />
                 ))}
-                <Image src="/bee.png" alt="" width={72} height={72} />
               </div>
               <span className="about-cap">Cooked this morning, eaten at lunch</span>
             </div>
           </div>
-          <div>
+          <div className="reveal" style={{ "--i": 1 } as React.CSSProperties}>
             <h2 className="about-title">We bee-lieve every child deserves a healthy lunch, even on the busiest mornings</h2>
             <p className="about-text">
               Packing lunch every day is hard. Canteen food isn&apos;t always healthy, and other lunch services cost a
@@ -132,11 +153,11 @@ export default function Home() {
           <div className="blob blob-1" aria-hidden="true" />
           <div className="blob blob-2" aria-hidden="true" />
           <div className="wrap">
-            <p className="kicker">The routine</p>
-            <h2 className="section-title">How it works</h2>
+            <p className="kicker reveal">The routine</p>
+            <h2 className="section-title reveal">How it works</h2>
             <ol className="how-steps">
               {STEPS.map((s, i) => (
-                <li key={s.title} className="how-step">
+                <li key={s.title} className="how-step reveal" style={{ "--i": i } as React.CSSProperties}>
                   <span className="how-num" aria-hidden="true">
                     {String(i + 1).padStart(2, "0")}
                   </span>
@@ -148,12 +169,29 @@ export default function Home() {
           </div>
         </section>
 
+        <section className="day-strip" aria-labelledby="day-title">
+          <div className="wrap">
+            <p className="kicker reveal">A day with MealBee</p>
+            <h2 id="day-title" className="section-title reveal">From our kitchen to their table</h2>
+            <ul className="strip">
+              {DAY.map((d, i) => (
+                <li key={d.img} className="strip-item reveal" style={{ "--i": i } as React.CSSProperties}>
+                  <div className="strip-photo">
+                    <Image src={`/photos/${d.img}.webp`} alt={d.alt} fill sizes="(max-width: 860px) 92vw, 340px" />
+                  </div>
+                  <span className="strip-cap">{d.caption}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
         <section id="lunchbox" className="lunchbox-section">
           <div className="wrap">
-            <p className="kicker">On the menu</p>
-            <h2 className="section-title">What&apos;s in the lunchbox</h2>
-            <p className="section-lead">Our first meal is simple, filling and made for kids.</p>
-            <ul className="lunchbox">
+            <p className="kicker reveal">On the menu</p>
+            <h2 className="section-title reveal">What&apos;s in the lunchbox</h2>
+            <p className="section-lead reveal">Our first meal is simple, filling and made for kids.</p>
+            <ul className="lunchbox reveal">
               {FOODS.map((f) => (
                 <li key={f.img} className="food">
                   <Image src={`/food/${f.img}.png`} alt="" width={80} height={80} className="food-img" />
@@ -162,7 +200,7 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-            <div className="price-pills">
+            <div className="price-pills reveal">
               <span className="price-pill">
                 <b>18.90 AED</b> a single lunch
               </span>
@@ -177,11 +215,11 @@ export default function Home() {
         <section className="features">
           <Wave />
           <div className="wrap">
-            <p className="kicker">For busy parents</p>
-            <h2 className="section-title">Everything you need</h2>
+            <p className="kicker reveal">For busy parents</p>
+            <h2 className="section-title reveal">Everything you need</h2>
             <ul className="feature-grid">
-              {FEATURES.map((f) => (
-                <li key={f.title} className="feature">
+              {FEATURES.map((f, i) => (
+                <li key={f.title} className="feature reveal" style={{ "--i": i } as React.CSSProperties}>
                   <span className="feature-icon">
                     <f.icon />
                   </span>
@@ -197,7 +235,7 @@ export default function Home() {
           <Wave />
           <Twirl className="join-twirl" />
           <div className="wrap join-inner">
-            <div className="join-copy">
+            <div className="join-copy reveal">
               <p className="kicker">Not ready to order yet?</p>
               <h2 className="section-title">Join the waitlist</h2>
               <p>
@@ -210,17 +248,19 @@ export default function Home() {
         </section>
 
         <section className="wrap">
-          <div className="closing">
-            <div>
+          <div className="closing reveal">
+            <Image src="/photos/containers.webp" alt="" fill sizes="(max-width: 1040px) 100vw, 1000px" className="closing-photo" />
+            <div className="closing-text">
               <h2>Bee happy, bee healthy.</h2>
               <p>Order your child&apos;s first week of lunches today.</p>
             </div>
-            <Link href="/order" className="btn">
+            <Link href="/order" className="btn closing-btn">
               Order lunches →
             </Link>
           </div>
         </section>
       </main>
+      <RevealOnScroll />
 
       <footer className="footer">
         <Wave />
@@ -238,7 +278,12 @@ export default function Home() {
               alyaadam1213@gmail.com
             </a>
           </p>
-          <p>© {new Date().getFullYear()} MealBee · A student project from Dubai</p>
+          <p>
+            © {new Date().getFullYear()} MealBee · A student project from Dubai · Photos from{" "}
+            <a href="https://www.pexels.com" className="footer-link" target="_blank" rel="noopener noreferrer">
+              Pexels
+            </a>
+          </p>
         </div>
       </footer>
     </>
