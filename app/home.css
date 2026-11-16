@@ -268,7 +268,7 @@
   letter-spacing: 0.05em;
 }
 
-.stat-item span {
+.stat-item > span {
   display: block;
   margin-top: 8px;
   font: 800 0.72rem var(--font-body), system-ui, sans-serif;
