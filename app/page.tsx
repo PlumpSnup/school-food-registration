@@ -1,178 +1,223 @@
 import Image from "next/image";
-import {
-  Doodles,
-  HeartIcon,
-  LeafIcon,
-  PhoneIcon,
-  PotIcon,
-  SchoolIcon,
-  StarIcon,
-  Twirl,
-  Wave,
-} from "./Decor";
+import Link from "next/link";
+import "./home.css";
+import { Doodles, HeartIcon, PhoneIcon, SchoolIcon, Twirl, Wave } from "./Decor";
 import WaitlistForm from "./WaitlistForm";
 
-const STEPS = [
-  {
-    icon: PhoneIcon,
-    title: "Pick a lunch",
-    text: "Choose a fresh, healthy meal for your child in the app. One day or the whole week.",
-  },
-  {
-    icon: PotIcon,
-    title: "Cooked fresh",
-    text: "A licensed kitchen prepares it that morning. Healthy, nut-free and kid-approved.",
-  },
-  {
-    icon: SchoolIcon,
-    title: "Delivered to school",
-    text: "Lunch arrives at school, ready to eat. No packing, no 7am panic.",
-  },
+const STATS = [
+  { value: "16.80", unit: "AED", label: "A lunch on the weekly plan" },
+  { value: "5", label: "Fresh foods in every box" },
+  { value: "6", unit: "PM", label: "Order cut-off, the day before" },
+  { value: "0", label: "Nuts in the kitchen" },
 ];
 
-const MEAL = [
-  { name: "Chicken breast", note: "Baked and mildly seasoned", color: "chicken" },
-  { name: "Rice", note: "Soft, fluffy white rice", color: "rice" },
-  { name: "Carrots", note: "Fresh, crunchy sticks", color: "carrot" },
-  { name: "Cucumbers", note: "Crisp mini cucumbers", color: "cucumber" },
-  { name: "Water", note: "A small bottle, no sugary drinks", color: "water" },
+const STEPS = [
+  { title: "Pick the days", text: "Choose one lunch for 18.90 AED, or the whole week for 84 AED. It takes a minute." },
+  { title: "We cook it fresh", text: "A licensed kitchen makes it that morning. Healthy, nut-free and kid-approved." },
+  { title: "Delivered to school", text: "Lunch arrives before the break, and you get a “Delivered” message. Sorted." },
 ];
+
+const FOODS = [
+  { name: "Chicken breast", note: "Baked and mildly seasoned", img: "chicken" },
+  { name: "Rice", note: "Soft, fluffy white rice", img: "rice" },
+  { name: "Carrots", note: "Fresh, crunchy sticks", img: "carrot" },
+  { name: "Cucumbers", note: "Crisp mini cucumbers", img: "cucumber" },
+  { name: "Water", note: "No sugary drinks", img: "water" },
+];
+
+const FEATURES = [
+  { icon: PhoneIcon, title: "Order for the week", text: "Pick single days or the whole week in one go." },
+  { icon: HeartIcon, title: "Allergies covered", text: "Add allergies once; the kitchen sees them on every order." },
+  { icon: SchoolIcon, title: "Track every lunch", text: "Ordered, cooking, delivered, right on your phone." },
+  { icon: UndoIcon, title: "Change your mind", text: "Cancel a day until 6 pm the day before." },
+];
+
+function UndoIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 48 48" aria-hidden="true">
+      <path
+        d="M16 14 8 22l8 8M8 22h20a10 10 0 0 1 0 20h-6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 export default function Home() {
   return (
     <>
-      <header className="topbar">
-        <div className="wrap topbar-inner">
-          <span className="topbar-name">
-            Meal<span className="y">Bee</span>
-          </span>
-          <a href="#join" className="btn btn-small">
-            Join the waitlist
-          </a>
-        </div>
-      </header>
-
-      <main>
-        <section className="hero">
-          <div className="hero-blob" aria-hidden="true" />
+      <main className="home">
+        <section className="hero-card">
+          <Doodles className="hero-doodles" />
           <Twirl className="hero-twirl" />
-          <Doodles />
-          <div className="wrap hero-inner">
-            <Image
-              src="/logo.png"
-              alt="MealBee logo"
-              width={519}
-              height={447}
-              priority
-              className="hero-logo"
-            />
-            <h1>Healthy school lunches, delivered to school.</h1>
-            <p className="tagline">Bee happy, bee healthy.</p>
-            <p className="lead">
-              We bee-lieve in better lunches. MealBee lets busy parents order fresh, healthy meals that are
-              delivered straight to their child&apos;s school. We&apos;re launching soon in Dubai.
+          <Twirl className="hero-twirl hero-twirl-2" />
+          <div className="hero-content">
+            <p className="kicker">Bee happy · bee healthy</p>
+            <h1 className="hero-title">
+              Lunch, sorted
+              <br />
+              before the <span className="sticker">bell.</span>
+            </h1>
+            <p className="hero-lead">
+              Busy mornings? Pick your child&apos;s lunches for the week in a minute. We cook them fresh and deliver
+              them straight to school in Dubai.
             </p>
-            <a href="#join" className="btn">
-              Join the waitlist
-            </a>
-            <ul className="badges" aria-label="What makes MealBee different">
-              <li>
-                <span className="badge-icon">
-                  <LeafIcon />
-                </span>
-                Healthy
-              </li>
-              <li>
-                <span className="badge-icon">
-                  <StarIcon />
-                </span>
-                Fresh daily
-              </li>
-              <li>
-                <span className="badge-icon">
-                  <HeartIcon />
-                </span>
-                Kid-approved
-              </li>
-            </ul>
+            <div className="hero-ctas">
+              <Link href="/order" className="btn btn-arrow">
+                Order lunches <span className="arrow">→</span>
+              </Link>
+              <a href="#how-it-works" className="btn btn-ghost">
+                How it works
+              </a>
+            </div>
+          </div>
+          <a href="#stats" className="scroll-cue" aria-label="Scroll down">
+            ↓
+          </a>
+          <div className="brackets" aria-hidden="true">
+            <span>[ Fresh daily ]</span>
+            <span>[ Delivered to school ]</span>
           </div>
         </section>
 
-        <section className="how" aria-labelledby="how-title">
-          <Wave />
+        <section id="stats" className="stats">
+          {STATS.map((s) => (
+            <div key={s.label} className="stat-item">
+              <b>
+                {s.value}
+                {s.unit && <small> {s.unit}</small>}
+              </b>
+              <span>{s.label}</span>
+            </div>
+          ))}
+        </section>
+
+        <section className="about wrap">
+          <div className="about-art">
+            <p className="kicker kicker-left">{"// About MealBee"}</p>
+            <p className="ghost-word" aria-hidden="true">
+              Fresh
+            </p>
+            <div className="about-pic" aria-hidden="true">
+              <div className="tray">
+                {FOODS.map((f) => (
+                  <Image key={f.img} src={`/food/${f.img}.png`} alt="" width={72} height={72} />
+                ))}
+                <Image src="/bee.png" alt="" width={72} height={72} />
+              </div>
+              <span className="about-cap">Cooked this morning, eaten at lunch</span>
+            </div>
+          </div>
+          <div>
+            <h2 className="about-title">We bee-lieve every child deserves a healthy lunch, even on the busiest mornings</h2>
+            <p className="about-text">
+              Packing lunch every day is hard. Canteen food isn&apos;t always healthy, and other lunch services cost a
+              lot or only work at certain schools.
+            </p>
+            <p className="about-text">
+              MealBee lets you pick one lunch or a whole week from your phone. A licensed kitchen cooks it fresh, and it
+              arrives at school ready to eat.
+            </p>
+            <Link href="/order" className="btn">
+              Order lunches →
+            </Link>
+          </div>
+        </section>
+
+        <section id="how-it-works" className="how">
+          <div className="blob blob-1" aria-hidden="true" />
+          <div className="blob blob-2" aria-hidden="true" />
           <div className="wrap">
-            <h2 id="how-title">How it works</h2>
-            <ol className="steps">
-              {STEPS.map((step) => (
-                <li key={step.title} className="step">
-                  <span className="step-icon" aria-hidden="true">
-                    <step.icon />
+            <p className="kicker">The routine</p>
+            <h2 className="section-title">How it works</h2>
+            <ol className="how-steps">
+              {STEPS.map((s, i) => (
+                <li key={s.title} className="how-step">
+                  <span className="how-num" aria-hidden="true">
+                    {String(i + 1).padStart(2, "0")}
                   </span>
-                  <h3>{step.title}</h3>
-                  <p>{step.text}</p>
+                  <h3>{s.title}</h3>
+                  <p>{s.text}</p>
                 </li>
               ))}
             </ol>
           </div>
         </section>
 
-        <section className="meal" aria-labelledby="meal-title">
-          <Wave />
-          <Twirl className="meal-twirl" />
+        <section id="lunchbox" className="lunchbox-section">
           <div className="wrap">
-            <h2 id="meal-title">What&apos;s in the lunchbox</h2>
+            <p className="kicker">On the menu</p>
+            <h2 className="section-title">What&apos;s in the lunchbox</h2>
             <p className="section-lead">Our first meal is simple, filling and made for kids.</p>
             <ul className="lunchbox">
-              {MEAL.map((item) => (
-                <li key={item.name} className={`food food-${item.color}`}>
-                  <Image src={`/food/${item.color}.png`} alt="" width={80} height={80} className="food-img" />
-                  <h3>{item.name}</h3>
-                  <p>{item.note}</p>
+              {FOODS.map((f) => (
+                <li key={f.img} className="food">
+                  <Image src={`/food/${f.img}.png`} alt="" width={80} height={80} className="food-img" />
+                  <h3>{f.name}</h3>
+                  <p>{f.note}</p>
+                </li>
+              ))}
+            </ul>
+            <div className="price-pills">
+              <span className="price-pill">
+                <b>18.90 AED</b> a single lunch
+              </span>
+              <span className="price-pill price-pill-dark">
+                <b>84 AED</b> a whole week
+              </span>
+            </div>
+            <p className="fine-print">Prices include 5% VAT.</p>
+          </div>
+        </section>
+
+        <section className="features">
+          <Wave />
+          <div className="wrap">
+            <p className="kicker">For busy parents</p>
+            <h2 className="section-title">Everything you need</h2>
+            <ul className="feature-grid">
+              {FEATURES.map((f) => (
+                <li key={f.title} className="feature">
+                  <span className="feature-icon">
+                    <f.icon />
+                  </span>
+                  <h3>{f.title}</h3>
+                  <p>{f.text}</p>
                 </li>
               ))}
             </ul>
           </div>
         </section>
 
-        <section className="prices" aria-labelledby="prices-title">
-          <Wave />
-          <div className="wrap">
-            <h2 id="prices-title">Simple prices</h2>
-            <div className="price-grid">
-              <div className="price-card">
-                <h3>Single meal</h3>
-                <p className="price">
-                  18.90 <span>AED</span>
-                </p>
-                <p className="price-sub">per lunch</p>
-                <p>Order just the days you need.</p>
-              </div>
-              <div className="price-card featured">
-                <span className="badge">Best value</span>
-                <h3>Weekly plan</h3>
-                <p className="price">
-                  84 <span>AED</span>
-                </p>
-                <p className="price-sub">per week, 5 lunches (16.80 AED each)</p>
-                <p>A healthy lunch every school day, sorted.</p>
-              </div>
-            </div>
-            <p className="fine-print">Prices include 5% VAT. Launch prices may change before we go live.</p>
-          </div>
-        </section>
-
-        <section id="join" className="join" aria-labelledby="join-title">
+        <section id="join" className="join">
           <Wave />
           <Twirl className="join-twirl" />
           <div className="wrap join-inner">
             <div className="join-copy">
-              <h2 id="join-title">Join the waitlist</h2>
+              <p className="kicker">Not ready to order yet?</p>
+              <h2 className="section-title">Join the waitlist</h2>
               <p>
                 Be the first to know when MealBee starts at your child&apos;s school. Joining is free and doesn&apos;t
                 commit you to anything.
               </p>
             </div>
             <WaitlistForm />
+          </div>
+        </section>
+
+        <section className="wrap">
+          <div className="closing">
+            <div>
+              <h2>Bee happy, bee healthy.</h2>
+              <p>Order your child&apos;s first week of lunches today.</p>
+            </div>
+            <Link href="/order" className="btn">
+              Order lunches →
+            </Link>
           </div>
         </section>
       </main>
