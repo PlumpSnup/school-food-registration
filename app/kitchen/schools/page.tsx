@@ -64,11 +64,14 @@ export default async function KitchenSchools({ searchParams }: { searchParams: P
                         <span>
                           {l.order.child.name} · {l.order.child.grade.replace("Grade ", "Gr ")}
                         </span>
-                        {l.order.child.allergies ? (
-                          <span className="chip chip-allergy">{l.order.child.allergies}</span>
-                        ) : (
-                          <span className="muted">—</span>
-                        )}
+                        <span className="row-end">
+                          {l.order.child.notes && <span className="row-note">{l.order.child.notes}</span>}
+                          {l.order.child.allergies ? (
+                            <span className="chip chip-allergy">{l.order.child.allergies}</span>
+                          ) : (
+                            !l.order.child.notes && <span className="muted">—</span>
+                          )}
+                        </span>
                       </li>
                     ))}
                   </ul>

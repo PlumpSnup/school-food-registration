@@ -90,6 +90,7 @@ export async function saveChild(_prev: FormState, formData: FormData): Promise<F
     school: text(formData, "school", 100),
     grade: text(formData, "grade", 30),
     allergies: text(formData, "allergies", 200),
+    notes: text(formData, "notes", 120),
   };
   const errors: Record<string, string> = {};
   if (child.name.length < 1) errors.name = "Please enter your child's first name.";

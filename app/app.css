@@ -951,11 +951,36 @@
   background: var(--yellow);
   text-decoration: none;
   color: var(--brown);
-  transition: transform 0.15s ease;
+  /* Lifts and presses down like the yellow buttons. */
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
 .big-card:hover {
-  transform: translateY(-3px) rotate(-0.5deg);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 0 var(--brown), 0 16px 26px rgba(74, 53, 38, 0.2);
+}
+
+.big-card:active {
+  transform: translateY(6px);
+  box-shadow: 0 0 0 var(--brown), 0 3px 6px rgba(74, 53, 38, 0.2);
+  transition-duration: 0.05s;
+}
+
+.kitchen-note {
+  margin: 10px 0 0;
+  padding: 7px 12px;
+  border-radius: 12px;
+  background: var(--honey-soft);
+  color: var(--brown);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.row-note {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--brown-soft);
+  text-align: right;
 }
 
 .big-label,

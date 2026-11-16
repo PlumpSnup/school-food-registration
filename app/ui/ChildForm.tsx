@@ -52,6 +52,12 @@ export default function ChildForm({ child }: { child?: Child }) {
         </label>
         <input id="allergies" name="allergies" defaultValue={child?.allergies} placeholder="e.g. no dairy" />
       </div>
+      <div className="field">
+        <label htmlFor="notes">
+          Notes for the kitchen <span className="optional">(optional)</span>
+        </label>
+        <input id="notes" name="notes" defaultValue={child?.notes} placeholder="e.g. small portion please" />
+      </div>
       <SubmitButton className="btn btn-block" pendingText="Saving…">
         {child ? "Save changes" : "Add child"}
       </SubmitButton>

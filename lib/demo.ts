@@ -8,7 +8,7 @@ export { aed, DAY_PRICE, MEAL, money, price, WEEK_PRICE } from "./demo-prices";
 
 export type LunchStatus = "ordered" | "cooking" | "delivered" | "cancelled";
 
-export type Child = { id: string; name: string; school: string; grade: string; allergies: string };
+export type Child = { id: string; name: string; school: string; grade: string; allergies: string; notes?: string };
 export type Lunch = { date: string; status: LunchStatus };
 export type Order = {
   id: string;
@@ -90,7 +90,8 @@ export async function resetState(): Promise<void> {
   await save(seed());
 }
 
-// Sample data: three schools, 38 children, weekly plans this week and next.
+// Sample data: three schools and 38 children with a realistic mix of plans, grades, siblings, allergies,
+// notes from parents and the odd cancelled lunch. It is random but repeatable for the same week.
 const SCHOOLS: [string, string[]][] = [
   [
     "Palm Grove School",
@@ -100,42 +101,90 @@ const SCHOOLS: [string, string[]][] = [
   ["Sunrise Academy", ["Ahmed", "Ella", "Rami", "Jana", "Hamza", "Leah", "Tariq", "Nadia", "Ben", "Rana", "Khalid", "Zara"]],
   ["Green Hills School", ["Musa", "Amira", "Leo", "Huda", "Isa"]],
 ];
-const ALLERGIES: Record<string, string> = {
-  Omar: "No dairy",
-  Sofia: "Gluten-free",
-  Ella: "Egg-free",
-  Leo: "No sesame",
-};
+const ALLERGIES = ["Gluten-free", "Egg-free", "No sesame", "No dairy", "Mild, no spice", "Soy-free"];
+const NOTES = [
+  "Small portion please",
+  "Extra rice",
+  "Cut the chicken small",
+  "No cucumber, extra carrots",
+  "Sauce on the side",
+  "Please pack a spoon",
+  "Big eater, extra chicken",
+  "Water only, no juice",
+];
+const SEED_GRADES = ["FS2 / KG1", "KG2", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7",
+  "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"];
+
+/** A small seeded random number generator (mulberry32), so a week's sample data is the same on every reset. */
+function random(seedText: string): () => number {
+  let a = [...seedText].reduce((h, c) => Math.imul(h ^ c.charCodeAt(0), 2654435761), 1779033703) >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
 
 function seed(now: Now = nowInDubai()): DemoState {
-  const thisWeek = schoolWeek(mondayOf(now.date));
-  const nextWeek = schoolWeek(addDays(mondayOf(now.date), 7));
+  const monday = mondayOf(now.date);
+  const weeks = [schoolWeek(monday), schoolWeek(addDays(monday, 7))];
+  const rnd = random(monday);
+  const pick = <T,>(list: T[]) => list[Math.floor(rnd() * list.length)];
   const state: DemoState = { version: 1, parents: {}, orders: [], nextOrderNo: 1001 };
 
+  // Today's lunches are cooking in the morning and delivered after lunch.
+  const todayStatus: LunchStatus = now.hour >= 12 ? "delivered" : now.hour >= 7 ? "cooking" : "ordered";
+  const statusFor = (date: string): LunchStatus =>
+    date < now.date ? "delivered" : date === now.date ? todayStatus : "ordered";
+
   let n = 0;
+  let parentEmail = "";
   for (const [school, names] of SCHOOLS) {
     for (const name of names) {
       n++;
-      const email = name === "Omar" ? DEMO_EMAIL : `parent${n}@example.com`;
-      const child: Child = { id: `c${n}`, name, school, grade: `Grade ${(n % 6) + 1}`, allergies: ALLERGIES[name] ?? "" };
-      if (name === "Omar") child.grade = "Grade 3";
-      state.parents[email] = { email, children: [child] };
+      const isDemo = name === "Omar";
+      // About one child in five is a younger sibling ordered by the same parent as the child before.
+      const sibling = !isDemo && n > 2 && parentEmail !== DEMO_EMAIL && rnd() < 0.2;
+      if (!sibling) parentEmail = isDemo ? DEMO_EMAIL : `parent${n}@example.com`;
+      const email = parentEmail;
 
-      // Omar has this week only, so the demo parent can order next week live.
-      const weeks = name === "Omar" ? [thisWeek] : [thisWeek, nextWeek];
-      for (const week of weeks) {
-        const days = n % 5 === 0 ? [week[0], week[2], week[4]] : week;
-        const wholeWeek = days.length === 5;
+      const child: Child = {
+        id: `c${n}`,
+        name,
+        school,
+        grade: isDemo ? "Grade 3" : pick(SEED_GRADES),
+        allergies: isDemo ? "No dairy" : rnd() < 0.2 ? pick(ALLERGIES) : "",
+        notes: isDemo ? "" : rnd() < 0.25 ? pick(NOTES) : "",
+      };
+      (state.parents[email] ??= { email, children: [] }).children.push(child);
+
+      weeks.forEach((week, w) => {
+        // Omar only has this week, so the demo parent can order next week live; some families skip a week.
+        if ((isDemo && w === 1) || (!isDemo && rnd() < 0.12)) return;
+        const r = rnd();
+        const count = isDemo ? 5 : r < 0.45 ? 5 : r < 0.6 ? 4 : r < 0.78 ? 3 : r < 0.9 ? 2 : 1;
+        const days = [...week]
+          .sort(() => rnd() - 0.5)
+          .slice(0, count)
+          .sort();
+        const wholeWeek = count === 5;
+        const placed = new Date(`${addDays(week[0], -2 - Math.floor(rnd() * 4))}T00:00:00+04:00`);
+        placed.setUTCMinutes(Math.floor((7 + rnd() * 15) * 60) - 4 * 60);
         state.orders.push({
           id: `MB-${state.nextOrderNo++}`,
           email,
           child,
           plan: wholeWeek ? "week" : "days",
-          createdAt: new Date(`${addDays(week[0], -3)}T09:00:00+04:00`).toISOString(),
+          createdAt: placed.toISOString(),
           ...price(days.length, wholeWeek),
-          lunches: days.map((date) => ({ date, status: "ordered" as const })),
+          lunches: days.map((date) => ({
+            date,
+            status: !isDemo && date > now.date && rnd() < 0.03 ? ("cancelled" as const) : statusFor(date),
+          })),
         });
-      }
+      });
     }
   }
   return state;

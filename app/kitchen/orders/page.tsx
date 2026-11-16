@@ -53,8 +53,11 @@ export default async function KitchenOrders({ searchParams }: Props) {
                 <div className="chips">
                   <span className="chip">{MEAL.short}</span>
                   {order.child.allergies && <span className="chip chip-allergy">{order.child.allergies}</span>}
-                  <span className="chip">{order.plan === "week" ? "Weekly plan" : "Picked days"}</span>
+                  <span className="chip">
+                    {order.plan === "week" ? "Weekly plan" : `${order.lunches.length} day${order.lunches.length > 1 ? "s" : ""}`}
+                  </span>
                 </div>
+                {order.child.notes && <p className="kitchen-note">“{order.child.notes}”</p>}
                 {(status === "ordered" || status === "cooking") && (
                   <div className="actions">
                     {status === "ordered" ? (
