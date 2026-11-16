@@ -1,4 +1,4 @@
-import { BlobPreconditionFailedError, get, put } from "@vercel/blob";
+import { get, put } from "@vercel/blob";
 import { addDays, isOpen, mondayOf, nowInDubai, schoolWeek, type Now } from "./dates";
 import { price } from "./demo-prices";
 
@@ -43,21 +43,23 @@ const PATH = "demo/state.json";
 const LOCAL_FILE = ".data/demo-state.json";
 const useLocal = () => !process.env.BLOB_READ_WRITE_TOKEN;
 
-async function load(): Promise<{ state: DemoState; etag?: string }> {
+async function load(): Promise<DemoState> {
   if (useLocal()) {
     const { readFile } = await import("node:fs/promises");
     try {
-      return { state: JSON.parse(await readFile(LOCAL_FILE, "utf8")) as DemoState };
+      return JSON.parse(await readFile(LOCAL_FILE, "utf8")) as DemoState;
     } catch {
-      return { state: seed() };
+      return seed();
     }
   }
   const result = await get(PATH, { access: "private", useCache: false });
-  if (!result || result.statusCode !== 200) return { state: seed() };
-  return { state: (await new Response(result.stream).json()) as DemoState, etag: result.blob.etag };
+  if (!result || result.statusCode !== 200) return seed();
+  return (await new Response(result.stream).json()) as DemoState;
 }
 
-async function save(state: DemoState, etag?: string): Promise<void> {
+// Saves overwrite the whole file. The ETag check Blob offers for conditional writes rejected every write
+// in production, and two people saving in the same instant is unlikely enough for a demo.
+async function save(state: DemoState): Promise<void> {
   if (useLocal()) {
     const { mkdir, writeFile } = await import("node:fs/promises");
     await mkdir(".data", { recursive: true });
@@ -67,39 +69,25 @@ async function save(state: DemoState, etag?: string): Promise<void> {
   await put(PATH, JSON.stringify(state), {
     access: "private",
     addRandomSuffix: false,
+    allowOverwrite: true,
     contentType: "application/json",
-    ...(etag ? { ifMatch: etag } : { allowOverwrite: false }),
   });
 }
 
 export async function readState(): Promise<DemoState> {
-  return (await load()).state;
+  return load();
 }
 
-/** Read, change and save the state; retries if someone else saved in between. */
+/** Read, change and save the state. */
 export async function updateState<T>(change: (state: DemoState) => T): Promise<T> {
-  for (let attempt = 0; attempt < 4; attempt++) {
-    const { state, etag } = await load();
-    const result = change(state);
-    try {
-      await save(state, etag);
-      return result;
-    } catch (err) {
-      if (err instanceof BlobPreconditionFailedError || (!etag && /exist/i.test(String(err)))) continue;
-      throw err;
-    }
-  }
-  throw new Error("The demo is busy, please try again.");
+  const state = await load();
+  const result = change(state);
+  await save(state);
+  return result;
 }
 
 export async function resetState(): Promise<void> {
-  if (useLocal()) return save(seed());
-  await put(PATH, JSON.stringify(seed()), {
-    access: "private",
-    addRandomSuffix: false,
-    allowOverwrite: true,
-    contentType: "application/json",
-  });
+  await save(seed());
 }
 
 // Sample data: three schools, 38 children, weekly plans this week and next.
