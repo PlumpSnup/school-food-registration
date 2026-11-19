@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { ADMIN_COOKIE, isAdmin, passwordMatches, sessionToken } from "@/lib/admin-auth";
-import { GRADES } from "@/lib/constants";
+import { GRADES, PARTNER_SCHOOLS } from "@/lib/constants";
 import { isOpen, isSchoolDay, orderWeekStart, schoolWeek } from "@/lib/dates";
 import {
   canCancel,
@@ -95,7 +95,7 @@ export async function saveChild(_prev: FormState, formData: FormData): Promise<F
   };
   const errors: Record<string, string> = {};
   if (child.name.length < 1) errors.name = "Please enter your child's first name.";
-  if (child.school.length < 2) errors.school = "Please enter the school.";
+  if (!(PARTNER_SCHOOLS as readonly string[]).includes(child.school)) errors.school = "Please choose a school.";
   if (!(GRADES as readonly string[]).includes(child.grade)) errors.grade = "Please choose a grade.";
   if (Object.keys(errors).length) return { errors };
 

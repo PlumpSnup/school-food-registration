@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { isAdmin } from "@/lib/admin-auth";
+import AutoRefresh from "../ui/AutoRefresh";
 import KitchenLogin from "../ui/KitchenLogin";
 import KitchenTabs from "../ui/KitchenTabs";
 
@@ -17,6 +18,8 @@ export default async function KitchenLayout({ children }: { children: React.Reac
   }
   return (
     <div className="kitchen">
+      {/* New orders and changes show up without reloading. */}
+      <AutoRefresh seconds={5} />
       <KitchenTabs />
       {children}
     </div>

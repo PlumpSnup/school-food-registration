@@ -90,16 +90,11 @@ export async function resetState(): Promise<void> {
   await save(seed());
 }
 
-// Sample data: three schools and 38 children with a realistic mix of plans, grades, siblings, allergies,
+// Sample data: one partner school and 12 children with a realistic mix of plans, grades, siblings, allergies,
 // notes from parents and the odd cancelled lunch. It is random but repeatable for the same week.
+// The pilot has one partner school, so the children added live on stage stand out.
 const SCHOOLS: [string, string[]][] = [
-  [
-    "Palm Grove School",
-    ["Omar", "Layla", "Zayn", "Mira", "Yusuf", "Hana", "Adam", "Noor", "Ali", "Sofia", "Karim", "Aisha", "Rayan",
-      "Lina", "Sami", "Maya", "Idris", "Dana", "Faris", "Salma", "Theo"],
-  ],
-  ["Sunrise Academy", ["Ahmed", "Ella", "Rami", "Jana", "Hamza", "Leah", "Tariq", "Nadia", "Ben", "Rana", "Khalid", "Zara"]],
-  ["Green Hills School", ["Musa", "Amira", "Leo", "Huda", "Isa"]],
+  ["Palm Grove School", ["Omar", "Layla", "Zayn", "Mira", "Yusuf", "Hana", "Adam", "Noor", "Ali", "Sofia", "Karim", "Aisha"]],
 ];
 const ALLERGIES = ["Gluten-free", "Egg-free", "No sesame", "No dairy", "Mild, no spice", "Soy-free"];
 const NOTES = [
@@ -172,6 +167,9 @@ function seed(now: Now = nowInDubai()): DemoState {
         const wholeWeek = count === 5;
         const placed = new Date(`${addDays(week[0], -2 - Math.floor(rnd() * 4))}T00:00:00+04:00`);
         placed.setUTCMinutes(Math.floor((7 + rnd() * 15) * 60) - 4 * 60);
+        // Sample orders are always in the past, at least a few hours ago, so none look brand new.
+        const latest = Date.now() - (3 + rnd() * 40) * 3_600_000;
+        if (placed.getTime() > latest) placed.setTime(latest);
         state.orders.push({
           id: `MB-${state.nextOrderNo++}`,
           email,
@@ -212,4 +210,16 @@ export function takenDays(state: DemoState, childId: string): Set<string> {
       .filter((o) => o.child.id === childId)
       .flatMap((o) => o.lunches.filter((l) => l.status !== "cancelled").map((l) => l.date)),
   );
+}
+
+/** Orders placed in the last few minutes show as "New" in the kitchen. */
+export const NEW_ORDER_MINUTES = 20;
+
+export function isNewOrder(order: Order, nowMs = Date.now()): boolean {
+  const age = nowMs - new Date(order.createdAt).getTime();
+  return age >= 0 && age < NEW_ORDER_MINUTES * 60_000;
+}
+
+export function latestOrders(state: DemoState, count: number): Order[] {
+  return [...state.orders].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, count);
 }

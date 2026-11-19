@@ -1396,6 +1396,137 @@
   --edge: #7a2a14;
 }
 
+/* Live: new orders in the kitchen, cooking and delivered for parents */
+
+.chip-new {
+  background: #e4572e;
+  border-color: #7a2a14;
+  color: #fff;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+.order-chips {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.card.is-new {
+  border-color: #e4572e;
+  box-shadow: 0 6px 0 #e4572e, var(--soft-shadow);
+  animation: arrive 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.98);
+  }
+}
+
+.latest-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  text-decoration: none;
+  color: var(--ink);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.latest-card:hover {
+  transform: translateY(-2px);
+}
+
+.latest-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.latest-text b {
+  font: 800 1rem var(--font-display), system-ui, sans-serif;
+  color: var(--brown);
+}
+
+.latest-text span {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.live-banners {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.live-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 11px 14px;
+  border-radius: 16px;
+  border: 2.5px solid var(--brown);
+  font-weight: 800;
+  font-size: 0.92rem;
+  color: var(--brown);
+  animation: arrive 0.5s ease;
+}
+
+.live-cooking {
+  background: var(--yellow);
+}
+
+.live-delivered {
+  background: #e3f0dc;
+  border-color: #4d7a3e;
+  color: #3d6331;
+}
+
+.live-dot {
+  width: 10px;
+  height: 10px;
+  flex: none;
+  border-radius: 50%;
+  background: #e4572e;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 40;
+  translate: -50% 0;
+  width: min(92vw, 440px);
+  padding: 14px 18px;
+  border-radius: 20px;
+  border: 3px solid var(--brown);
+  background: var(--brown);
+  color: var(--yellow);
+  font: 800 1rem var(--font-display), system-ui, sans-serif;
+  text-align: center;
+  box-shadow: 0 14px 30px rgba(74, 53, 38, 0.35);
+  animation: toast-in 0.4s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+}
+
 @media print {
   .appbar,
   .no-print,
@@ -1414,6 +1545,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .chip-new,
+  .card.is-new,
+  .live-banner,
+  .live-dot,
+  .toast {
+    animation: none;
+  }
+
   .who-chip,
   .pill,
   .day,

@@ -7,6 +7,7 @@ import { currentParentEmail } from "@/lib/session";
 import { cancelLunch } from "../actions";
 import AutoRefresh from "../ui/AutoRefresh";
 import ConfirmButton from "../ui/ConfirmButton";
+import LiveStatus, { type LiveItem } from "../ui/LiveStatus";
 import StatusChip, { StatusSteps } from "../ui/StatusChip";
 
 export const metadata: Metadata = { title: "My lunches · MealBee" };
@@ -27,6 +28,13 @@ export default async function LunchesPage() {
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 5);
   const many = children.length > 1;
+  // Upcoming lunches feed the live banners, and a change from Ordered to Cooking or Delivered pops up.
+  const tracked: LiveItem[] = upcoming.map((l) => ({
+    key: `${l.order.id}-${l.date}`,
+    name: l.order.child.name,
+    day: l.date === now.date ? "today" : formatDate(l.date, { weekday: "long" }),
+    status: l.status,
+  }));
 
   const card = (l: (typeof lunches)[number], faded = false) => (
     <li key={`${l.order.id}-${l.date}`} className={`card lunch-card${faded ? " faded" : ""}`}>
@@ -58,6 +66,7 @@ export default async function LunchesPage() {
       <AutoRefresh />
       <p className="eyebrow">{children.map((c) => `${c.name} · ${c.school}`).join(" · ") || "Your lunches"}</p>
       <h1 className="page-title">My lunches</h1>
+      <LiveStatus items={tracked} />
 
       {upcoming.length === 0 ? (
         <div className="card empty">

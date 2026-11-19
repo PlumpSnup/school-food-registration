@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { formatDate, isSchoolDay, mondayOf, schoolWeek } from "@/lib/dates";
-import { activeCount, lunchesOn, readState } from "@/lib/demo";
+import { formatDate, isSchoolDay, mondayOf, schoolWeek, timeAgo } from "@/lib/dates";
+import { activeCount, isNewOrder, latestOrders, lunchesOn, readState } from "@/lib/demo";
 import { resetDemo } from "../actions";
 import ConfirmButton from "../ui/ConfirmButton";
 import { kitchenDays } from "./days";
@@ -64,6 +64,33 @@ export default async function KitchenHome({ searchParams }: { searchParams: Prom
           Allergies ({allergies})
         </Link>
       </div>
+
+      <h2 className="section-label">Latest orders</h2>
+      <ul className="stack latest">
+        {latestOrders(state, 5).map((o) => {
+          const fresh = isNewOrder(o);
+          const days = o.lunches.map((l) => formatDate(l.date, { weekday: "short" })).join(", ");
+          return (
+            <li key={o.id}>
+              <Link
+                href={`/kitchen/orders?day=${o.lunches[0]?.date ?? tomorrow}`}
+                className={`card latest-card${fresh ? " is-new" : ""}`}
+              >
+                <span className="avatar">{o.child.name.slice(0, 1).toUpperCase()}</span>
+                <span className="latest-text">
+                  <b>
+                    {o.child.name} · {o.plan === "week" ? "Whole week" : `${o.lunches.length} day${o.lunches.length > 1 ? "s" : ""}`}
+                  </b>
+                  <span>
+                    {days} · #{o.id} · {timeAgo(o.createdAt)}
+                  </span>
+                </span>
+                {fresh && <span className="chip chip-new">New</span>}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
 
       <form action={resetDemo} className="reset-form">
         <ConfirmButton

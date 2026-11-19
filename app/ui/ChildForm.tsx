@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { saveChild, type FormState } from "@/app/actions";
-import { GRADES } from "@/lib/constants";
+import { GRADES, PARTNER_SCHOOLS } from "@/lib/constants";
 import type { Child } from "@/lib/demo";
 import SubmitButton from "./SubmitButton";
 
@@ -28,7 +28,13 @@ export default function ChildForm({ child }: { child?: Child }) {
       <div className="field-row">
         <div className="field">
           <label htmlFor="school">School</label>
-          <input id="school" name="school" defaultValue={child?.school} required {...aria("school")} />
+          <select id="school" name="school" defaultValue={child?.school ?? PARTNER_SCHOOLS[0]} required {...aria("school")}>
+            {PARTNER_SCHOOLS.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
           {err("school")}
         </div>
         <div className="field">

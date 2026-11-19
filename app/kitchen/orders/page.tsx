@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { formatDate } from "@/lib/dates";
-import { lunchesOn, MEAL, readState } from "@/lib/demo";
+import { isNewOrder, lunchesOn, MEAL, readState } from "@/lib/demo";
 import { setLunchStatus } from "../../actions";
 import ConfirmButton from "../../ui/ConfirmButton";
 import DayPicker from "../../ui/DayPicker";
@@ -18,6 +18,8 @@ export default async function KitchenOrders({ searchParams }: Props) {
   const { now, days, selected } = kitchenDays(state, day);
   let lunches = lunchesOn(state, selected, now);
   if (allergies) lunches = lunches.filter((l) => l.order.child.allergies);
+  // Orders that just came in go to the top.
+  lunches = [...lunches].sort((a, b) => Number(isNewOrder(b.order)) - Number(isNewOrder(a.order)));
 
   return (
     <main className="app-page">
@@ -40,7 +42,10 @@ export default async function KitchenOrders({ searchParams }: Props) {
           {lunches.map(({ order, lunch, status }) => {
             const act = (to: "cooking" | "delivered" | "cancelled") => setLunchStatus.bind(null, order.id, lunch.date, to);
             return (
-              <li key={`${order.id}-${lunch.date}`} className={`card order-card${status === "cancelled" ? " faded" : ""}`}>
+              <li
+                key={`${order.id}-${lunch.date}`}
+                className={`card order-card${status === "cancelled" ? " faded" : ""}${isNewOrder(order) ? " is-new" : ""}`}
+              >
                 <div className="order-top">
                   <div>
                     <b>{order.child.name}</b>
@@ -48,7 +53,10 @@ export default async function KitchenOrders({ searchParams }: Props) {
                       {order.child.grade} · {order.child.school} · #{order.id}
                     </p>
                   </div>
-                  <StatusChip status={status} />
+                  <span className="order-chips">
+                    {isNewOrder(order) && <span className="chip chip-new">New</span>}
+                    <StatusChip status={status} />
+                  </span>
                 </div>
                 <div className="chips">
                   <span className="chip">{MEAL.short}</span>
