@@ -94,7 +94,7 @@ export async function resetState(): Promise<void> {
 // notes from parents and the odd cancelled lunch. It is random but repeatable for the same week.
 // The pilot has one partner school, so the children added live on stage stand out.
 const SCHOOLS: [string, string[]][] = [
-  ["Palm Grove School", ["Omar", "Layla", "Zayn", "Mira", "Yusuf", "Hana", "Adam", "Noor", "Ali", "Sofia", "Karim", "Aisha"]],
+  ["Bob Academy", ["Omar", "Layla", "Zayn", "Mira", "Yusuf", "Hana", "Adam", "Noor", "Ali", "Sofia", "Karim", "Aisha"]],
 ];
 const ALLERGIES = ["Gluten-free", "Egg-free", "No sesame", "No dairy", "Mild, no spice", "Soy-free"];
 const NOTES = [

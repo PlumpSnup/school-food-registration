@@ -25,4 +25,4 @@ export const PLANS = {
 export type Plan = keyof typeof PLANS;
 
 /** Schools MealBee delivers to. The pilot starts with one partner school. */
-export const PARTNER_SCHOOLS = ["Palm Grove School"] as const;
+export const PARTNER_SCHOOLS = ["Bob Academy"] as const;
