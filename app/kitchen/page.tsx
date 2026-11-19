@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { formatDate, isSchoolDay, mondayOf, schoolWeek, timeAgo } from "@/lib/dates";
-import { activeCount, isNewOrder, latestOrders, lunchesOn, readState } from "@/lib/demo";
+import { formatDate, timeAgo } from "@/lib/dates";
+import { isNewOrder, latestOrders, lunchesOn, readState } from "@/lib/demo";
 import { resetDemo } from "../actions";
 import ConfirmButton from "../ui/ConfirmButton";
 import { kitchenDays } from "./days";
@@ -11,13 +11,12 @@ export const dynamic = "force-dynamic";
 export default async function KitchenHome({ searchParams }: { searchParams: Promise<{ reset?: string }> }) {
   const { reset } = await searchParams;
   const state = await readState();
-  const { now, tomorrow } = kitchenDays(state);
+  const { now, days, selected } = kitchenDays(state);
 
-  const tomorrowLunches = lunchesOn(state, tomorrow, now).filter((l) => l.status !== "cancelled");
-  const allergies = tomorrowLunches.filter((l) => l.order.child.allergies).length;
-  const today = isSchoolDay(now.date) ? lunchesOn(state, now.date, now).filter((l) => l.status !== "cancelled") : [];
-  const todaySchools = new Set(today.map((l) => l.order.child.school)).size;
-  const week = schoolWeek(mondayOf(now.date)).reduce((sum, d) => sum + activeCount(state, d, now), 0);
+  // Next week, Monday to Friday: the week parents are ordering for.
+  const weekLunches = days.flatMap((d) => lunchesOn(state, d.date, now)).filter((l) => l.status !== "cancelled");
+  const children = new Set(weekLunches.map((l) => l.order.child.id));
+  const allergyChildren = new Set(weekLunches.filter((l) => l.order.child.allergies).map((l) => l.order.child.id));
   const greeting = now.hour < 12 ? "Good morning" : now.hour < 17 ? "Good afternoon" : "Good evening";
 
   return (
@@ -32,12 +31,10 @@ export default async function KitchenHome({ searchParams }: { searchParams: Prom
         {greeting} <Image src="/bee.png" alt="" width={36} height={36} className="title-bee" />
       </h1>
 
-      <Link href={`/kitchen/orders?day=${tomorrow}`} className="card big-card">
+      <Link href="/kitchen/orders" className="card big-card">
         <span>
-          <span className="big-label">
-            Next delivery · {formatDate(tomorrow, { weekday: "short", day: "numeric", month: "short" })}
-          </span>
-          <span className="big-num">{tomorrowLunches.length}</span>
+          <span className="big-label">Next week · Monday to Friday</span>
+          <span className="big-num">{weekLunches.length}</span>
           <span className="big-sub">lunches to cook</span>
         </span>
         <span className="big-go">View →</span>
@@ -45,23 +42,23 @@ export default async function KitchenHome({ searchParams }: { searchParams: Prom
 
       <div className="grid2">
         <div className="card stat">
-          <p>Today</p>
-          <b>{today.length}</b>
-          <span>{isSchoolDay(now.date) ? `lunches · ${todaySchools} schools` : "no school today"}</span>
+          <p>Children</p>
+          <b>{children.size}</b>
+          <span>eating with us next week</span>
         </div>
         <div className="card stat">
-          <p>This week</p>
-          <b>{week}</b>
-          <span>lunches ordered</span>
+          <p>Allergies</p>
+          <b>{allergyChildren.size}</b>
+          <span>children to watch for</span>
         </div>
       </div>
 
       <div className="grid2">
-        <Link href={`/kitchen/schools?day=${tomorrow}`} className="btn btn-block">
+        <Link href={`/kitchen/schools?day=${selected}`} className="btn btn-block">
           School lists
         </Link>
-        <Link href={`/kitchen/orders?day=${tomorrow}&allergies=1`} className="btn btn-ghost btn-block">
-          Allergies ({allergies})
+        <Link href={`/kitchen/orders?day=${selected}&allergies=1`} className="btn btn-ghost btn-block">
+          Allergies ({allergyChildren.size})
         </Link>
       </div>
 
@@ -73,7 +70,7 @@ export default async function KitchenHome({ searchParams }: { searchParams: Prom
           return (
             <li key={o.id}>
               <Link
-                href={`/kitchen/orders?day=${o.lunches[0]?.date ?? tomorrow}`}
+                href={`/kitchen/orders?day=${o.lunches[0]?.date ?? selected}`}
                 className={`card latest-card${fresh ? " is-new" : ""}`}
               >
                 <span className="avatar">{o.child.name.slice(0, 1).toUpperCase()}</span>

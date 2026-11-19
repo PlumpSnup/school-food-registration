@@ -23,9 +23,9 @@ export default async function KitchenOrders({ searchParams }: Props) {
 
   return (
     <main className="app-page">
-      <p className="eyebrow">{formatDate(selected, { weekday: "long", day: "numeric", month: "short" })}</p>
+      <p className="eyebrow">{`${formatDate(selected, { weekday: "long" })} · next week`}</p>
       <h1 className="page-title">Orders</h1>
-      <DayPicker base="/kitchen/orders" days={days} selected={selected} today={now.date} />
+      <DayPicker base="/kitchen/orders" days={days} selected={selected} />
       <div className="filter-row">
         <Link href={`/kitchen/orders?day=${selected}`} className={allergies ? "chip" : "chip chip-on"}>
           All

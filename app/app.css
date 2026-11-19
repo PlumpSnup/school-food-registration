@@ -1213,6 +1213,34 @@
   color: var(--muted);
 }
 
+.day-short {
+  display: none;
+}
+
+/* On phones all five days fit on one row with short names. */
+@media (max-width: 560px) {
+  .day-chips {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    overflow: visible;
+    margin: 0 0 12px;
+    padding: 4px 0 10px;
+  }
+
+  .day-chip {
+    padding: 6px 2px;
+  }
+
+  .day-long {
+    display: none;
+  }
+
+  .day-short {
+    display: inline;
+  }
+}
+
 .day-chip.on {
   background: var(--yellow);
   border-color: var(--brown);

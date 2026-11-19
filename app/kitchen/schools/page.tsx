@@ -30,13 +30,13 @@ export default async function KitchenSchools({ searchParams }: { searchParams: P
       <div className="title-row">
         <div>
           <p className="eyebrow">
-            {formatDate(selected, { weekday: "long", day: "numeric", month: "short" })} · {lunches.length} lunches
+            {`${formatDate(selected, { weekday: "long" })} · next week`} · {lunches.length} lunches
           </p>
           <h1 className="page-title">Delivery lists</h1>
         </div>
         <PrintButton />
       </div>
-      <DayPicker base="/kitchen/schools" days={days} selected={selected} today={now.date} />
+      <DayPicker base="/kitchen/schools" days={days} selected={selected} />
 
       {sorted.length === 0 ? (
         <p className="card empty">No lunches for this day.</p>
